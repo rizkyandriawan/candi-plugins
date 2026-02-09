@@ -1,0 +1,168 @@
+/* ==========================================================================
+   Candi UI Forms — cnd-forms.css
+   Clean, modern form styles for the cnd-form widget system.
+   ========================================================================== */
+
+/* --- Form container --- */
+.cnd-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 40rem;
+}
+
+/* --- Field group wrapper --- */
+.cnd-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.cnd-form__group--error .cnd-form__input,
+.cnd-form__group--error .cnd-form__select,
+.cnd-form__group--error .cnd-form__textarea {
+    border-color: #dc2626;
+}
+
+/* --- Labels --- */
+.cnd-form__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    line-height: 1.25rem;
+}
+
+.cnd-form__label--checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.cnd-form__required {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+/* --- Inputs --- */
+.cnd-form__input {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: #111827;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-sizing: border-box;
+}
+
+.cnd-form__input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.cnd-form__input::placeholder {
+    color: #9ca3af;
+}
+
+/* --- Textarea --- */
+.cnd-form__textarea {
+    min-height: 6rem;
+    resize: vertical;
+}
+
+/* --- Select --- */
+.cnd-form__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+/* --- Checkbox --- */
+.cnd-form__checkbox {
+    width: 1rem;
+    height: 1rem;
+    accent-color: #3b82f6;
+    cursor: pointer;
+}
+
+/* --- Error message --- */
+.cnd-form__error {
+    display: block;
+    font-size: 0.8125rem;
+    color: #dc2626;
+    line-height: 1.25rem;
+    margin-top: 0.125rem;
+}
+
+/* --- Fieldset / Group --- */
+.cnd-form__fieldset {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.cnd-form__legend {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1f2937;
+    padding: 0 0.5rem;
+}
+
+/* --- Actions (submit button area) --- */
+.cnd-form__actions {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 0.5rem;
+}
+
+.cnd-form__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #fff;
+    background-color: #3b82f6;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+    line-height: 1.5;
+}
+
+.cnd-form__submit:hover {
+    background-color: #2563eb;
+}
+
+.cnd-form__submit:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.cnd-form__submit:active {
+    background-color: #1d4ed8;
+}
+
+/* --- Disabled state --- */
+.cnd-form__input:disabled,
+.cnd-form__select:disabled,
+.cnd-form__textarea:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
