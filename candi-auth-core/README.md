@@ -89,16 +89,15 @@ public class AppUserProvider implements CandiUserProvider {
 | `login(String username, String password)` | Authenticates with credentials; throws `AuthenticationException` on failure |
 | `logout()` | Clears the current session or token state |
 
-Usage in a `.jhtml` page class:
+`getCurrentUser()` returns **your original entity** (e.g. the JPA `User` class), not a framework wrapper. You can safely cast it to your application's user type:
 
 ```java
 @Autowired
 private CandiAuthService auth;
 
 public void onGet() {
-    if (auth.isAuthenticated()) {
-        this.user = auth.getCurrentUser();
-    }
+    // Direct cast to your application's User class — no DB lookup needed
+    User user = (User) auth.getCurrentUser();
 }
 ```
 
@@ -107,6 +106,8 @@ public void onGet() {
 ### @Protected
 
 Restricts a page to authenticated users. Unauthenticated requests are redirected to the login URL.
+
+All auth annotations (`@Protected`, `@Public`, `@OwnerOnly`) use `@Inherited`, so they work correctly with Candi's generated `_Candi` subclasses. You only need to annotate your page class — the generated subclass inherits the annotation automatically.
 
 ```java
 // Any authenticated user
@@ -223,3 +224,18 @@ The auth interceptor stores the current user as a request attribute (`_candiUser
 ```
 
 You can also retrieve the user programmatically via `AuthRequestHolder.getCurrentUser()` from any code running within a request context.
+
+## Interceptor Registration
+
+The auth interceptor is registered automatically with `CandiHandlerMapping` via auto-configuration. This is important because Candi uses a custom `HandlerMapping` — Spring's `WebMvcConfigurer.addInterceptors()` does **not** apply to Candi page requests.
+
+If you need to register your own interceptor for Candi pages, use:
+
+```java
+@Autowired
+private CandiHandlerMapping candiHandlerMapping;
+
+candiHandlerMapping.addCandiInterceptor(myInterceptor);
+```
+
+Do **not** use `WebMvcConfigurer.addInterceptors()` — it only applies to `@Controller`-based endpoints, not Candi pages.

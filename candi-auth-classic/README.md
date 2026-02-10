@@ -55,8 +55,8 @@ The module activates automatically when Spring Security is on the classpath and 
 Under the hood, candi-auth-classic integrates with Spring Security:
 
 - **ClassicUserDetailsService** bridges your `CandiUserProvider` to Spring Security's `UserDetailsService`. When Spring Security needs to load a user, it delegates to your provider.
-- **ClassicCandiUser** implements both `CandiUser` and Spring Security's `UserDetails`, bridging the two models seamlessly.
-- **ClassicCandiAuthService** implements `CandiAuthService` using Spring Security's `SecurityContextHolder` and `AuthenticationManager`.
+- **ClassicCandiUser** implements both `CandiUser` and Spring Security's `UserDetails`, bridging the two models seamlessly. It preserves a reference to the original entity so `getCurrentUser()` can return your actual `User` class.
+- **ClassicCandiAuthService** implements `CandiAuthService` using Spring Security's `SecurityContextHolder` and `AuthenticationManager`. `getCurrentUser()` returns the **original entity** (not the wrapper), so you can cast directly to your app's user type.
 - **DaoAuthenticationProvider** with **BCrypt** password encoding handles credential verification.
 
 ### Session Management
@@ -168,10 +168,11 @@ public class DashboardPage implements CandiPage {
     @Autowired
     private CandiAuthService auth;
 
-    private CandiUser user;
+    private AppUser user;
 
     public void onGet() {
-        this.user = auth.getCurrentUser();
+        // getCurrentUser() returns your original entity — safe to cast
+        this.user = (AppUser) auth.getCurrentUser();
     }
 }
 ```
