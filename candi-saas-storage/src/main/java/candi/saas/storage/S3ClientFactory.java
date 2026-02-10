@@ -39,8 +39,7 @@ public class S3ClientFactory {
             builder.endpointOverride(URI.create(props.getEndpoint()))
                     .serviceConfiguration(S3Configuration.builder()
                             .pathStyleAccessEnabled(true)
-                            .build())
-                    .forcePathStyle(true);
+                            .build());
         } else if (!props.getEndpoint().isEmpty()) {
             builder.endpointOverride(URI.create(props.getEndpoint()));
         }

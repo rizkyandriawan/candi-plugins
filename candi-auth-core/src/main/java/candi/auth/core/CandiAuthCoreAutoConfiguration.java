@@ -1,6 +1,7 @@
 package candi.auth.core;
 
 import candi.auth.core.widget.CndLoginForm;
+import candi.runtime.CandiHandlerMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -29,7 +30,17 @@ public class CandiAuthCoreAutoConfiguration implements WebMvcConfigurer {
     public CandiAuthCoreAutoConfiguration(CandiAuthService authService, ApplicationContext applicationContext) {
         this.authService = authService;
         this.applicationContext = applicationContext;
-        log.info("Candi Auth Core initialized");
+
+        // Register interceptor with CandiHandlerMapping so it applies to Candi page requests.
+        // WebMvcConfigurer.addInterceptors() only applies to Spring's built-in handler mappings,
+        // not to custom HandlerMapping beans like CandiHandlerMapping.
+        try {
+            CandiHandlerMapping candiMapping = applicationContext.getBean(CandiHandlerMapping.class);
+            candiMapping.addCandiInterceptor(new CandiAuthInterceptor(authService, applicationContext));
+            log.info("Candi Auth Core initialized (interceptor registered with CandiHandlerMapping)");
+        } catch (Exception e) {
+            log.info("Candi Auth Core initialized (CandiHandlerMapping not found, using WebMvc interceptors only)");
+        }
     }
 
     @Bean
@@ -39,6 +50,8 @@ public class CandiAuthCoreAutoConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // This registers the interceptor with Spring's built-in handler mappings
+        // (RequestMappingHandlerMapping, etc.) for non-Candi endpoints like @RestController.
         registry.addInterceptor(candiAuthInterceptor())
                 .addPathPatterns("/**");
     }

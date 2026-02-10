@@ -23,9 +23,15 @@ public class ClassicCandiUser implements CandiUser, UserDetails {
     private final Set<String> roles;
     private final String displayName;
     private final String avatar;
+    private final CandiUser originalUser;
 
     public ClassicCandiUser(Object id, String username, String email, String passwordHash,
                             Set<String> roles, String displayName, String avatar) {
+        this(id, username, email, passwordHash, roles, displayName, avatar, null);
+    }
+
+    public ClassicCandiUser(Object id, String username, String email, String passwordHash,
+                            Set<String> roles, String displayName, String avatar, CandiUser originalUser) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -33,10 +39,13 @@ public class ClassicCandiUser implements CandiUser, UserDetails {
         this.roles = roles != null ? Set.copyOf(roles) : Set.of();
         this.displayName = displayName;
         this.avatar = avatar;
+        this.originalUser = originalUser;
     }
 
     /**
      * Creates a ClassicCandiUser from a CandiUser plus a password hash.
+     * Preserves a reference to the original user so it can be retrieved later
+     * via {@link #getOriginalUser()}.
      */
     public static ClassicCandiUser from(CandiUser user, String passwordHash) {
         return new ClassicCandiUser(
@@ -46,8 +55,17 @@ public class ClassicCandiUser implements CandiUser, UserDetails {
                 passwordHash,
                 user.getRoles(),
                 user.getDisplayName(),
-                user.getAvatar()
+                user.getAvatar(),
+                user
         );
+    }
+
+    /**
+     * Returns the original {@link CandiUser} that was wrapped, or null if not available.
+     * This allows retrieving the actual entity (e.g. a JPA User) from the security principal.
+     */
+    public CandiUser getOriginalUser() {
+        return originalUser;
     }
 
     // CandiUser methods

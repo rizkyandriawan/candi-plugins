@@ -36,7 +36,10 @@ public class ClassicCandiAuthService implements CandiAuthService {
 
         Object principal = auth.getPrincipal();
         if (principal instanceof ClassicCandiUser candiUser) {
-            return candiUser;
+            // Return the original CandiUser (e.g. the JPA entity) if available,
+            // so callers can cast to their actual User type without a DB lookup.
+            CandiUser original = candiUser.getOriginalUser();
+            return original != null ? original : candiUser;
         }
 
         // Not a Candi user (e.g., anonymousUser string)
