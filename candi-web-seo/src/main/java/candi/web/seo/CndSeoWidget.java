@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * <p>Usage in layout template: {@code {{ widget "cnd-seo" }}}
  */
-@Component("cnd-seo__Widget")
+@Component("CndSeo__Widget")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CndSeoWidget implements CandiComponent {
 
